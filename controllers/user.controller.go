@@ -14,6 +14,7 @@ type UserController struct {
 func (u UserController) Get(ctx *gin.Context) {
 	var user models.User
 	err := u.Service.GetUser(ctx, &user)
+	lib.CheckErr(err)
 	if err != nil {
 		ctx.AbortWithStatusJSON(lib.NotFound())
 		return
@@ -23,28 +24,39 @@ func (u UserController) Get(ctx *gin.Context) {
 
 func (u UserController) GetMany(ctx *gin.Context) {
 	var users []models.User
-	u.Service.GetManyUser(ctx, &users)
+	err := u.Service.GetManyUser(ctx, &users)
+	lib.CheckErr(err)
 	lib.SendResponse(lib.SendResponseOptions{Context: ctx, Data: users})
 }
 
 func (u UserController) Create(ctx *gin.Context) {
 	var user = ctx.MustGet("create-user").(models.User)
-	_ = u.Service.CreateUser(&user)
+	err := u.Service.CreateUser(&user)
+	lib.CheckErr(err)
 	u.Service.ShouldReturn(ctx, &user)
 	lib.SendResponse(lib.SendResponseOptions{Context: ctx, Data: user, StatusCode: 201})
 }
 
 func (u UserController) Update(ctx *gin.Context) {
 	var user = ctx.MustGet("update-user").(models.User)
-	user.ID = ctx.GetInt("id")
-	_ = u.Service.UpdateUser(ctx, &user)
+	err := u.Service.UpdateUser(ctx, &user)
+	lib.CheckErr(err)
 	u.Service.ShouldReturn(ctx, &user)
 	lib.SendResponse(lib.SendResponseOptions{Context: ctx})
 }
 
 func (u UserController) Delete(ctx *gin.Context) {
 	var user models.User
-	user.ID = ctx.GetInt("id")
-	_ = u.Service.DeleteUser(ctx, &user)
+	err := u.Service.DeleteUser(ctx, &user)
+	lib.CheckErr(err)
 	lib.SendResponse(lib.SendResponseOptions{Context: ctx, StatusCode: 204})
+}
+
+func (u UserController) GetUserWith(preload string) func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		var user models.User
+		err := u.Service.GetUserWith(ctx, &user, preload)
+		lib.CheckErr(err)
+		lib.SendResponse(lib.SendResponseOptions{Context: ctx, Data: user, StatusCode: 200})
+	}
 }
