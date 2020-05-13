@@ -29,7 +29,7 @@ func (u UserController) GetMany(ctx *gin.Context) {
 
 func (u UserController) Create(ctx *gin.Context) {
 	var user = ctx.MustGet("create-user").(models.User)
-	_ = u.Service.CreateUser(ctx, &user)
+	_ = u.Service.CreateUser(&user)
 	u.Service.ShouldReturn(ctx, &user)
 	lib.SendResponse(lib.SendResponseOptions{Context: ctx, Data: user, StatusCode: 201})
 }

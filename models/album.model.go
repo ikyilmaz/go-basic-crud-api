@@ -1,8 +1,9 @@
 package models
 
 type Album struct {
-	Name   string `json:"omitempty,name" gorm:"type:varchar(128);not null;"`
-	Photo  string `json:"omitempty,photo" gorm:"default:'default.jpeg'"`
-	UserID uint   `json:"omitempty,userId" gorm:"type:int;not null;"`
-	User   *User  `json:"omitempty,user"`
+	BaseModel
+	Name  string `json:"name,omitempty"   gorm:"type:varchar(128);not null;"`
+	Photo string `json:"photo,omitempty"  gorm:"default:'default.jpeg'"`
+	//UserID uint   `json:"userId,omitempty" gorm:"type:int;not null;"`
+	Users []*User `json:"user,omitempty"  gorm:"many2many:users_albums;"`
 }

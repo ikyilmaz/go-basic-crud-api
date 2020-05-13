@@ -56,6 +56,7 @@ func CreateOrUpdateUser(isCreate bool) func(*gin.Context) {
 			isRequired(schema, isCreate)
 			return schema.Min(6).Max(32)
 		}()
+		keys["role"] = jio.String().Optional().Default("user").Valid("user", "artist", "admin")
 
 		_, err := jio.ValidateJSON(&body, jio.Object().Keys(keys))
 

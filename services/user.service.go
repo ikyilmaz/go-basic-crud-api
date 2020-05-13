@@ -30,7 +30,7 @@ func (u UserService) GetManyUser(ctx *gin.Context, users *[]models.User) error {
 	return u.Scopes(getUserDefaults, lib.Paginator(ctx, 20, 25)).Find(users).Error
 }
 
-func (u UserService) CreateUser(ctx *gin.Context, user *models.User) error {
+func (u UserService) CreateUser(user *models.User) error {
 	return u.Create(user).Error
 }
 

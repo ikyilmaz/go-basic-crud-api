@@ -9,6 +9,7 @@ import (
 
 func main() {
 	db := models.NewDB()
+
 	app := gin.New()
 
 	middlewares.InitMiddleWares(app, db)

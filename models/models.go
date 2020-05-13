@@ -12,7 +12,10 @@ func NewDB() *gorm.DB {
 
 	lib.CheckErr(err)
 
-	sync(db, SyncOptions{Force: false})
+	sync(db, SyncOptions{
+		Force:   true,
+		LogMode: true,
+	})
 
 	return db
 }
@@ -23,21 +26,27 @@ var (
 )
 
 type SyncOptions struct {
-	Force bool
+	Force   bool
+	LogMode bool
 }
 
 func sync(db *gorm.DB, options SyncOptions) {
 	var album Album
 	var user User
+	var userAlbum UserAlbum
 
 	if options.Force {
-		db.DropTableIfExists(&album, &user)
+		db.DropTableIfExists(&userAlbum, &album, &user)
 	}
 
-	db.AutoMigrate(&user, &album)
+	db.AutoMigrate(&userAlbum, &user, &album)
 
-	db.Model(&album).
-		AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+	//db.Model(&album).
+	//	AddForeignKey("user_id", "users(id)", "CASCADE", "CASCADE")
+
+	db.Table("users_albums").
+		AddForeignKey("user_id", "users(id)", "CASCADE", "RESTRICT").
+		AddForeignKey("album_id", "albums(id)", "CASCADE", "RESTRICT")
 
 }
 
