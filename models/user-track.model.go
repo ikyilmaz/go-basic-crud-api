@@ -1,10 +1,10 @@
 package models
 
-type UserAlbum struct {
+type UserTrack struct {
 	ID      int `json:"id,omitempty"      gorm:"primary_key"`
 	UserID  int `json:"userId,omitempty"  gorm:"not null;type:int;"`
-	AlbumID int `json:"albumId,omitempty" gorm:"not null;type:int;"`
+	TrackID int `json:"trackId,omitempty" gorm:"not null;type:int;"`
 
 	User  *User  `json:"user"`
-	Album *Album `json:"album"`
+	Track *Track `json:"track"`
 }

@@ -13,7 +13,12 @@ type User struct {
 	Password  string `json:"password,omitempty"  gorm:"not null;"`
 	Role      string `json:"role,omitempty"      gorm:"type:varchar(64);default:'user';type:enum('user','artist','admin')"`
 
-	Albums []*Album `json:"albums,omitempty"     gorm:"many2many:users_albums;"`
+	// ONE 2 MANY
+	AlbumsOwned []*Album `json:"albums_owned,omitempty" gorm:"foreignkey:OwnerID"`
+	TracksOwned []*Track `json:"tracks_owned,omitempty" gorm:"foreignkey:OwnerID"`
+	// MANY 2 MANY
+	AlbumsParticipated []*Album `json:"albumsParticipated,omitempty"     gorm:"many2many:user_albums;"`
+	TracksParticipated []*Track `json:"tracksParticipated,omitempty"     gorm:"many2many:user_tracks;"`
 }
 
 func (u *User) BeforeSave() {
