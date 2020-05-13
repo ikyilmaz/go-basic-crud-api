@@ -14,7 +14,10 @@ func userRoutes(router *gin.RouterGroup) {
 	}
 
 	router.
-		GET("/", userController.GetMany).
+		GET(
+			"/",
+			userController.GetMany,
+		).
 		POST(
 			"/",
 			validators.CreateOrUpdateUser(true),
@@ -33,5 +36,24 @@ func userRoutes(router *gin.RouterGroup) {
 			filters.CheckValidationResult,
 			userController.Update,
 		).
-		DELETE("/:id", userController.Get)
+		DELETE(
+			"/:id",
+			userController.Delete,
+		).
+		GET(
+			"/:id/albums",
+			userController.GetUserWith("AlbumsOwned"),
+		).
+		GET(
+			"/:id/tracks",
+			userController.GetUserWith("TracksOwned"),
+		).
+		GET(
+			"/:id/albums-participated",
+			userController.GetUserWith("AlbumsParticipated"),
+		).
+		GET(
+			"/:id/tracks-participated",
+			userController.GetUserWith("TracksParticipated"),
+		)
 }

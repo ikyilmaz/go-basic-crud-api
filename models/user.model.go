@@ -14,8 +14,9 @@ type User struct {
 	Role      string `json:"role,omitempty"      gorm:"type:varchar(64);default:'user';type:enum('user','artist','admin')"`
 
 	// ONE 2 MANY
-	AlbumsOwned []*Album `json:"albums_owned,omitempty" gorm:"foreignkey:OwnerID"`
-	TracksOwned []*Track `json:"tracks_owned,omitempty" gorm:"foreignkey:OwnerID"`
+	AlbumsOwned []*Album `json:"albumsOwned,omitempty" gorm:"foreignkey:OwnerID"`
+	TracksOwned []*Track `json:"tracksOwned,omitempty" gorm:"foreignkey:OwnerID"`
+
 	// MANY 2 MANY
 	AlbumsParticipated []*Album `json:"albumsParticipated,omitempty"     gorm:"many2many:user_albums;"`
 	TracksParticipated []*Track `json:"tracksParticipated,omitempty"     gorm:"many2many:user_tracks;"`

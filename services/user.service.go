@@ -6,15 +6,10 @@ import (
 	"go-rest-api/lib"
 	"go-rest-api/models"
 	"strconv"
-	"strings"
 )
 
-func limitUserFields(fields ...string) string {
-	return strings.Join(fields, ",")
-}
-
 func getUserDefaults(db *gorm.DB) *gorm.DB {
-	return db.Select(limitUserFields("id", "first_name", "last_name", "username"))
+	return db.Select("id, first_name, last_name, username")
 }
 
 type UserService struct {
@@ -24,6 +19,11 @@ type UserService struct {
 func (u UserService) GetUser(ctx *gin.Context, user *models.User) error {
 	user.ID = ctx.GetInt("id")
 	return u.Scopes(getUserDefaults).Find(user).Error
+}
+
+func (u UserService) GetUserWith(ctx *gin.Context, user *models.User, preload string) error {
+	user.ID = ctx.GetInt("id")
+	return u.Preload(preload).Scopes(getUserDefaults).Find(user).Error
 }
 
 func (u UserService) GetManyUser(ctx *gin.Context, users *[]models.User) error {
